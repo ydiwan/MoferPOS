@@ -1,0 +1,6 @@
+@MoferPos.Backend_HostAddress = http://localhost:5162
+
+GET {{MoferPos.Backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
