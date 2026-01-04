@@ -20,7 +20,11 @@ public class OrderConfig : IEntityTypeConfiguration<Order>
         b.Property(x => x.ExternalOrderRef).HasMaxLength(64);
 
         b.HasIndex(x => new { x.OrganizationId, x.LocationId, x.CreatedAt });
-        b.HasIndex(x => new { x.OrganizationId, x.LocationId, x.ExternalOrderRef });
+
+        // Idempotency: same lane retry should return the existing order.
+        // SQLite unique index allows multiple NULLs, but enforces uniqueness when provided.
+        b.HasIndex(x => new { x.OrganizationId, x.LocationId, x.ExternalOrderRef })
+            .IsUnique();
 
         b.HasOne(x => x.Location)
             .WithMany(l => l.Orders)
